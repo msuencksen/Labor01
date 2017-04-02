@@ -1,15 +1,24 @@
 package com.example.mazine.labor01;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
+    public static AlarmManager alarmMgr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +35,21 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // alarm
+        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("hello");
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(this,0, broadcastIntent, 0);
+
+        long startTime = System.currentTimeMillis();
+        long repeatDuration = 10 * 1000; // in ms
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, startTime, repeatDuration, alarmIntent);
+
+        Log.d(TAG,"onCreate done");
     }
 
     @Override
